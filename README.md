@@ -3,8 +3,7 @@
 + Add Book Database - with columns ISBN, Name, Borrowed(Bool), Authors
 + Create User Database - with columns Name, Phone number, Email, User ID, password(encrypted), role
 + **Finish front end**
-
-
++ Get book Database
 
 # **Use Cases**
 1. Add, edit, delete books
