@@ -16,6 +16,6 @@
 
 ## Databases
 + Movies - ID, Name, Venue, Seats free, Total seats in theater, Timing
-+ Users - Name, Contact No, Email, Role
++ Users - ID, Name, Contact No, Email/Username, Password, Role
 + Tickets - ID, Name, Movie ID
-+ Venues - Name, Venue admin username
++ Venues - Name, Venue admin ID
