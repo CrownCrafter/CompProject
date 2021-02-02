@@ -1,6 +1,13 @@
+### Start Dependencies
+import mysql.connector
+### End Dependencies
+
 ### Start VARIABLE DECLARATIONS
 loggedin = False
 #TODO Connect to DB
+cnx = mysql.connector.connect()
+
+# End Connection
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
 def getLoginScreen():
