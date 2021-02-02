@@ -1,33 +1,29 @@
-### Start Dependencies
-import mysql.connector
-### End Dependencies
-
 ### Start VARIABLE DECLARATIONS
-loggedin = False
+loginstatus = False
 #TODO Connect to DB
-cnx = mysql.connector.connect()
-
-# End Connection
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
 def getLoginScreen():
     email = input("Type Email ")
     pwd = input("Type Password ") #TODO Add SQL commands
-    if(loggedin == True):
-        print("Succesfully logged in. Sending you to homepage")
+    loggedIn = True
+    if(loggedIn == True):
+         print("Succesfully logged in. Sending you to homepage")
     else:
-        print("Error occured, crashing")
+         print("Error occured, crashing")
+    return loggedIn
 
-
-
+def getLogoutScreen():
+    print("Logged out")
 ### End FUNCTION DEFINITIONS
 ### Start Program
 print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
     print("Choose your preferred option") #TODO add conditional for user role
     print("1)View Available movies")
-    if(loggedin == False):
+    if(loginstatus == False):
         print("2)Login") #TODO add login functionality
+
     else:
         print("2)Logout")
     print("3)Add, edit, remove movies playing") #for Venueadmin, superadmin
@@ -37,13 +33,17 @@ while(True): #infinite loop
     if(oper == 1):
         getMovielist() #TODO def getmovielist
     elif(oper == 2):
-        getLoginScreen()
-        if(loggedin == True):
+        if(loginstatus == False):
+            if(getLoginScreen() == True):
+                loginstatus = True
+            elif(getLoginScreen() == False):
+                loginstatus = False
+            continue
+        else:
+            getLogoutScreen()
+            loginstatus = False
             continue
 
-
-        else:
-            break
 
     elif(oper == 5):
         print("Exiting...")
