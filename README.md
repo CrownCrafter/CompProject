@@ -1,23 +1,21 @@
-## Library DBMS
-# **To-do**
-+ Add Book Database - with columns ISBN, Name, Borrowed(Bool), Authors
-+ Create User Database - with columns Name, Phone number, Email, User ID, password(encrypted), role
-+ **Finish front end**
-+ Get book Database
+# **Online Movie Booking**
 
-# **Use Cases**
-1. Add, edit, delete books
-2. Add, edit, delete users
-3. Assign books as borrowed in the name of users with time of borrowing and due date
-4. View Book details
-5. History of Borrowing of a book
+## Usecases
+1. View movie details
+2. Add/edit/remove movies
+3. Book/buy tickets
+4. Add/edit/remove users
 
-# **User Roles**
-+ Student :-
-  Use cases 4
-  
-+ Staff :-
-  Use cases 3, 4, 5
-  
-+ Admin:-
-  Use cases ALL
+
+
+## Users
++ User - Usecase 1, 3
++ Venue Admin - Usecase 2(partially), 1, 3
++ Super Admin - Usecase ALL
+
+
+## Databases
++ Movies - ID, Name, Venue, Seats free, Total seats in theater, Timing
++ Users - ID, Name, Contact No, Email/Username, Password, Role
++ Tickets - ID, Name, Movie ID
++ Venues - Name, Venue admin ID
