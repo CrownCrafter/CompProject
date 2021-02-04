@@ -1,0 +1,27 @@
+CREATE TABLE movies(
+MovieID INT(10),
+Name varchar(60),
+Venue varchar(60),
+Seats_free INT(5),
+Total_seats INT(5),
+Time DATETIME);
+
+CREATE TABLE users(
+UserID INT(10),
+Email varchar(255),
+Password varchar(255),
+Role varchar(255)
+);
+
+CREATE TABLE tickets(
+TicketID INT(10),
+UserID INT(10),
+MovieID INT(10)
+);
+
+
+CREATE TABLE venues(
+VenueID INT(10),
+Name varchar(255),
+UserID INT(10)
+);
