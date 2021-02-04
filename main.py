@@ -1,6 +1,7 @@
 
 ### Start Dependencies
-
+import mysql.connector
+import pandas as pd
 ### End Dependencies
 ### Start VARIABLE DECLARATIONS
 loginstatus = False
@@ -10,6 +11,27 @@ role = None
 #TODO Connect to DB
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
+def create_server_connection(host_name, user_name, user_password):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password
+        )
+    except Error as err:
+        print(f"Error: '{err}'")
+
+    return connection
+
+def execute_query(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+    except Error as err:
+        print(f"Error: '{err}'")
+
 def getLoginScreen():
     email = input("Type Email ")
     pwd = input("Type Password ") #TODO Add SQL commands
@@ -31,6 +53,10 @@ def getUserlist():
     print("Insert user list here")
 ### End FUNCTION DEFINITIONS
 ### Start Program
+connection = create_server_connection("localhost", "admin", "admin")
+
+
+
 print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
     print("Choose your preferred option") #TODO add conditional for user role
