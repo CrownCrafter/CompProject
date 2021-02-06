@@ -1,3 +1,9 @@
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+Create DATABASE CompProject;
+GRANT ALL PRIVILEGES ON CompProject.* TO 'admin'@'localhost';
+flush PRIVILEGES;
+
+
 CREATE TABLE movies(
 MovieID INT(10) NOT NULL AUTO_INCREMENT,
 Name varchar(60),
