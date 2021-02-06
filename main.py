@@ -1,23 +1,24 @@
 
 ### Start Dependencies
 import mysql.connector
-import pandas as pd
 ### End Dependencies
 ### Start VARIABLE DECLARATIONS
 loginstatus = False
+userID = None
 email = None
 pwd = None
 role = None
 #TODO Connect to DB
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
-def create_server_connection(host_name, user_name, user_password):
+def create_server_connection(host_name, user_name, user_password, db):
     connection = None
     try:
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            passwd=user_password
+            passwd=user_password,
+            database=db
         )
     except Error as err:
         print(f"Error: '{err}'")
@@ -35,7 +36,8 @@ def execute_query(connection, query):
 def getLoginScreen():
     email = input("Type Email ")
     pwd = input("Type Password ") #TODO Add SQL commands
-    loggedIn = True
+
+
     if(loggedIn == True):
          print("Succesfully logged in. Sending you to homepage")
          ## Give user a role
@@ -53,7 +55,7 @@ def getUserlist():
     print("Insert user list here")
 ### End FUNCTION DEFINITIONS
 ### Start Program
-connection = create_server_connection("localhost", "admin", "admin")
+connection = create_server_connection("localhost", "admin", "admin", "CompProject") #Connect to DB
 
 
 
