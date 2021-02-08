@@ -4,10 +4,11 @@ import mysql.connector
 ### End Dependencies
 ### Start VARIABLE DECLARATIONS
 loginstatus = False
-userID = None
 email = None
 pwd = None
 role = None
+loginstatus = False
+
 #TODO Connect to DB
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
@@ -25,29 +26,27 @@ def create_server_connection(host_name, user_name, user_password, db):
 
     return connection
 
-def execute_query(connection, query):
-    cursor = connection.cursor(connection)
-    try:
-        cursor.execute(query)
-        connection.commit()
-    except Error as err:
-        print(f"Error: '{err}'")
 
 def getLoginScreen(connection):
+    global email, pwd, role, loginstatus
+    email = None
+    pwd = None
+    role = None
+    loginstatus = False
     email = input("Type Email ")
-    pwd = input("Type Password ") #TODO Add SQL commands
-    query = "SELECT USERID, Email, Password, Role FROM users WHERE Email = ", email," AND Password = ", pwd,";"
-    print(query)
-    if(loggedIn == True):
-         print("Succesfully logged in. Sending you to homepage")
-         ## Give user a role
-    else:
-         print("Error occured, crashing")
-    return loggedIn
-
-def getLogoutScreen(userID, email, pwd, role):
+    pwd = input("Type Password ")
+    query = "SELECT Email, Role FROM users WHERE Email = '" + email + "' AND Password = '" + pwd +"';"
+    cursor = connection.cursor()
+    cursor.execute(query)
+    result = cursor.fetchone()
+    email= result[0]  ## TRY and EXCEPT block2s
+    role = result[1]
+    if(role != None):
+        loginstatus = True
+def getLogoutScreen():
     print("Logged out")
-    userID = None
+    global email, pwd, role, loginstatus
+    loginstatus = False
     email = None
     pwd = None
     role = None
@@ -66,6 +65,8 @@ connection = create_server_connection("localhost", "admin", "admin", "CompProjec
 print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
     print("Choose your preferred option") #TODO add conditional for user role
+    if(role != None):
+        print("Logged in as " + str(role))
     if(loginstatus == True):
         print("1)View Available movies")
     if(loginstatus == False):
@@ -78,21 +79,17 @@ while(True): #infinite loop
     if(role == "superadmin"):
         print("4)Add, edit, remove users") #for superadmin
     print("5)Exit Program")
+    if(loginstatus == False):
+        print("6)Sign up")
     oper = int(input("")) #TODO Add conditional for user role
     if(oper == 1 and loginstatus == True):
         getMovielist() #Only view
         continue
     elif(oper == 2):
         if(loginstatus == False):
-            if(getLoginScreen(connection) == True):
-                loginstatus = True
-            elif(getLoginScreen(connection) == False):
-                loginstatus = False
-            continue
+            getLoginScreen(connection)
         else:
             getLogoutScreen()
-            loginstatus = False
-            continue
     if(role == "venueadmin" and oper == 3):
         getMovielist()
         continue #Show only venueadmin's venue movies with add, remove, edit privileges
@@ -104,8 +101,8 @@ while(True): #infinite loop
         continue #TODO def getuserlist
     if(oper == 5):
         print("Exiting...")
+        connection.close()
         break
-    else:
-        print("Wrong Choice, try again")
-        continue
+    if(loginstatus == False and oper == 6):
+        getSignupScreen()
 #End
