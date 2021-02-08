@@ -26,18 +26,18 @@ def create_server_connection(host_name, user_name, user_password, db):
     return connection
 
 def execute_query(connection, query):
-    cursor = connection.cursor()
+    cursor = connection.cursor(connection)
     try:
         cursor.execute(query)
         connection.commit()
     except Error as err:
         print(f"Error: '{err}'")
 
-def getLoginScreen():
+def getLoginScreen(connection):
     email = input("Type Email ")
     pwd = input("Type Password ") #TODO Add SQL commands
-
-
+    query = "SELECT USERID, Email, Password, Role FROM users WHERE Email = ", email," AND Password = ", pwd,";"
+    print(query)
     if(loggedIn == True):
          print("Succesfully logged in. Sending you to homepage")
          ## Give user a role
@@ -45,8 +45,12 @@ def getLoginScreen():
          print("Error occured, crashing")
     return loggedIn
 
-def getLogoutScreen():
+def getLogoutScreen(userID, email, pwd, role):
     print("Logged out")
+    userID = None
+    email = None
+    pwd = None
+    role = None
 
 def getMovielist():
     print("Insert Movie list here")
@@ -80,9 +84,9 @@ while(True): #infinite loop
         continue
     elif(oper == 2):
         if(loginstatus == False):
-            if(getLoginScreen() == True):
+            if(getLoginScreen(connection) == True):
                 loginstatus = True
-            elif(getLoginScreen() == False):
+            elif(getLoginScreen(connection) == False):
                 loginstatus = False
             continue
         else:
