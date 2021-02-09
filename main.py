@@ -134,13 +134,13 @@ connection = create_server_connection("localhost", "admin", "admin", "CompProjec
 
 print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
-    print("Choose your preferred option") #TODO add conditional for user role
+    print("Choose your preferred option")
     if(role != None):
         print("Logged in as " + str(role))
     if(loginstatus == True):
         print("1)View Available movies")
     if(loginstatus == False):
-        print("2)Login") #TODO add login functionality
+        print("2)Login")
 
     else:
         print("2)Logout")
@@ -151,28 +151,28 @@ while(True): #infinite loop
     print("5)Exit Program")
     if(loginstatus == False):
         print("6)Sign up")
-    oper = int(input("")) #TODO Add conditional for user role
-    if(oper == 1 and loginstatus == True):
+    oper = input("")
+    if(oper == '1' and loginstatus == True):
         getMovielist() #Only view
         continue
-    elif(oper == 2):
+    elif(oper == '2'):
         if(loginstatus == False):
             getLoginScreen(connection)
         else:
             getLogoutScreen()
-    if(role == "venueadmin" and oper == 3):
+    if(role == "venueadmin" and oper == '3'):
         getMovielist()
         continue #Show only venueadmin's venue movies with add, remove, edit privileges
-    if(role == "superadmin" and oper == 3):
+    if(role == "superadmin" and oper == '3'):
         getMovielist()
         continue #Show all movies
-    if(role == "superadmin" and oper == 4):
+    if(role == "superadmin" and oper == '4'):
         getUserlist(connection)
-        continue #TODO def getuserlist
-    if(oper == 5):
+        continue
+    if(oper == '5'):
         print("Exiting...")
         connection.close()
         break
-    if(loginstatus == False and oper == 6):
+    if(loginstatus == False and oper == '6'):
         getSignupScreen()
 #End
