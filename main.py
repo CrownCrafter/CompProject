@@ -1,5 +1,6 @@
 
 ### Start Dependencies
+from prettytable import PrettyTable
 import mysql.connector
 ### End Dependencies
 ### Start VARIABLE DECLARATIONS
@@ -59,9 +60,10 @@ def getUserlist(connection):
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-
+    tab = PrettyTable(["Email", "Role"])
     for i in result:
-        print(i[0]+"          "+i[1])
+        tab.add_row([i[0], i[1]])
+    print(tab)
     print("To filter by Role, enter r")
     print("To filter by Email, enter n")
     print("To go back to main menu, enter anything else")
@@ -78,8 +80,11 @@ def getUserlist(connection):
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
+            tab = PrettyTable(["Email", "Role"])
             for i in result:
-                print(i[0]+"          "+i[1])
+                tab.add_row([i[0], i[1]])
+            print(tab)
             print("Enter anything to bo back to main menu")
             oper = input("")
 
@@ -88,17 +93,23 @@ def getUserlist(connection):
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
+            tab = PrettyTable(["Email", "Role"])
             for i in result:
-                print(i[0]+"          "+i[1])
-            print("Enter anything to bo back to main menu")
+                tab.add_row([i[0], i[1]])
+            print(tab)
+            print("Enter anything to go back to main menu")
             oper = input("")
         if(oper == '3'):
             query = "SELECT Email, Role FROM users WHERE Role = 'superadmin';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
+            tab = PrettyTable(["Email", "Role"])
             for i in result:
-                print(i[0]+"          "+i[1])
+                tab.add_row([i[0], i[1]])
+            print(tab)
             print("Enter anything to bo back to main menu")
             oper = input("")
 
@@ -109,9 +120,10 @@ def getUserlist(connection):
         cursor.execute(query)
         result = cursor.fetchall()
 
+        tab = PrettyTable(["Email", "Role"])
         for i in result:
-            print(i[0]+"          "+i[1])
-        print("Enter anything to bo back to main menu")
+            tab.add_row([i[0], i[1]])
+        print(tab)
         oper = input("")
 
 ### End FUNCTION DEFINITIONS
