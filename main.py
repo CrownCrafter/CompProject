@@ -54,8 +54,66 @@ def getLogoutScreen():
 def getMovielist():
     print("Insert Movie list here")
 
-def getUserlist():
-    print("Insert user list here")
+def getUserlist(connection):
+    query = "SELECT Email, Role FROM users;"
+    cursor = connection.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    for i in result:
+        print(i[0]+"          "+i[1])
+    print("To filter by Role, enter r")
+    print("To filter by Email, enter n")
+    print("To go back to main menu, enter anything else")
+    oper = input("")
+    if(oper == 'r'):
+        print("Filter by following roles:")
+        print("1)User")
+        print("2)Venueadmin")
+        print("3)Superadmin")
+        print("To go back to main menu, enter anything else")
+        oper = input("")
+        if(oper == '1'):
+            query = "SELECT Email, Role FROM users WHERE Role = 'user';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            for i in result:
+                print(i[0]+"          "+i[1])
+            print("Enter anything to bo back to main menu")
+            oper = input("")
+
+        if(oper == '2'):
+            query = "SELECT Email, Role FROM users WHERE Role = 'venueadmin';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            for i in result:
+                print(i[0]+"          "+i[1])
+            print("Enter anything to bo back to main menu")
+            oper = input("")
+        if(oper == '3'):
+            query = "SELECT Email, Role FROM users WHERE Role = 'superadmin';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            for i in result:
+                print(i[0]+"          "+i[1])
+            print("Enter anything to bo back to main menu")
+            oper = input("")
+
+    elif(oper == 'n'):
+        e = input("Enter Email to be Filtered: ")
+        query = "SELECT Email, Role FROM users WHERE Email = '"+e+"';"
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        for i in result:
+            print(i[0]+"          "+i[1])
+        print("Enter anything to bo back to main menu")
+        oper = input("")
+
 ### End FUNCTION DEFINITIONS
 ### Start Program
 connection = create_server_connection("localhost", "admin", "admin", "CompProject") #Connect to DB
@@ -97,7 +155,7 @@ while(True): #infinite loop
         getMovielist()
         continue #Show all movies
     if(role == "superadmin" and oper == 4):
-        getUserlist()
+        getUserlist(connection)
         continue #TODO def getuserlist
     if(oper == 5):
         print("Exiting...")
