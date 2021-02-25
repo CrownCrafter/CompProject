@@ -131,8 +131,23 @@ def getMovielist():
     result = cursor.fetchall()
     tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
     for i in result:
-        tab.add_row(i[0], i[1], i[2], i[3])
+        tab.add_row([i[0], i[1], i[2], i[3]])
     print(tab)
+    print("To Filter by Name, press n")
+    oper = input("")
+    if(oper == 'n'):
+        name = input("Enter Movie Name ")
+        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+        for i in result:
+            tab.add_row([i[0], i[1], i[2], i[3]])
+        print(tab)
+        oper = input("")
+
+
 
 ### End FUNCTION DEFINITIONS
 ### Start Program
