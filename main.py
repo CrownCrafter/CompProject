@@ -52,79 +52,87 @@ def getLogoutScreen():
     pwd = None
     role = None
 
-def getMovielist():
-    print("Insert Movie list here")
 
-def getUserlist(connection):
-    query = "SELECT Email, Role FROM users;"
+# def getUserlist(connection):
+#     query = "SELECT Email, Role FROM users;"
+#     cursor = connection.cursor()
+#     cursor.execute(query)
+#     result = cursor.fetchall()
+#     tab = PrettyTable(["Email", "Role"])
+#     for i in result:
+#         tab.add_row([i[0], i[1]])
+#     print(tab)
+#     print("To filter by Role, enter r")
+#     print("To filter by Email, enter n")
+#     print("To go back to main menu, enter anything else")
+#     oper = input("")
+#     if(oper == 'r'):
+#         print("Filter by following roles:")
+#         print("1)User")
+#         print("2)Venueadmin")
+#         print("3)Superadmin")
+#         print("To go back to main menu, enter anything else")
+#         oper = input("")
+#         if(oper == '1'):
+#             query = "SELECT Email, Role FROM users WHERE Role = 'user';"
+#             cursor = connection.cursor()
+#             cursor.execute(query)
+#             result = cursor.fetchall()
+
+#             tab = PrettyTable(["Email", "Role"])
+#             for i in result:
+#                 tab.add_row([i[0], i[1]])
+#             print(tab)
+#             print("Enter anything to bo back to main menu")
+#             oper = input("")
+
+#         if(oper == '2'):
+#             query = "SELECT Email, Role FROM users WHERE Role = 'venueadmin';"
+#             cursor = connection.cursor()
+#             cursor.execute(query)
+#             result = cursor.fetchall()
+
+#             tab = PrettyTable(["Email", "Role"])
+#             for i in result:
+#                 tab.add_row([i[0], i[1]])
+#             print(tab)
+#             print("Enter anything to go back to main menu")
+#             oper = input("")
+#         if(oper == '3'):
+#             query = "SELECT Email, Role FROM users WHERE Role = 'superadmin';"
+#             cursor = connection.cursor()
+#             cursor.execute(query)
+#             result = cursor.fetchall()
+
+#             tab = PrettyTable(["Email", "Role"])
+#             for i in result:
+#                 tab.add_row([i[0], i[1]])
+#             print(tab)
+#             print("Enter anything to bo back to main menu")
+#             oper = input("")
+
+#     elif(oper == 'n'):
+#         e = input("Enter Email to be Filtered: ")
+#         query = "SELECT Email, Role FROM users WHERE Email = '"+e+"';"
+#         cursor = connection.cursor()
+#         cursor.execute(query)
+#         result = cursor.fetchall()
+
+#         tab = PrettyTable(["Email", "Role"])
+#         for i in result:
+#             tab.add_row([i[0], i[1]])
+#         print(tab)
+#         oper = input("")
+def getMovielist():
+
+    query = "SELECT Name, Venue, Seats_free, Time FROM movies;"
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-    tab = PrettyTable(["Email", "Role"])
+    tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
     for i in result:
-        tab.add_row([i[0], i[1]])
+        tab.add_row(i[0], i[1], i[2], i[3])
     print(tab)
-    print("To filter by Role, enter r")
-    print("To filter by Email, enter n")
-    print("To go back to main menu, enter anything else")
-    oper = input("")
-    if(oper == 'r'):
-        print("Filter by following roles:")
-        print("1)User")
-        print("2)Venueadmin")
-        print("3)Superadmin")
-        print("To go back to main menu, enter anything else")
-        oper = input("")
-        if(oper == '1'):
-            query = "SELECT Email, Role FROM users WHERE Role = 'user';"
-            cursor = connection.cursor()
-            cursor.execute(query)
-            result = cursor.fetchall()
-
-            tab = PrettyTable(["Email", "Role"])
-            for i in result:
-                tab.add_row([i[0], i[1]])
-            print(tab)
-            print("Enter anything to bo back to main menu")
-            oper = input("")
-
-        if(oper == '2'):
-            query = "SELECT Email, Role FROM users WHERE Role = 'venueadmin';"
-            cursor = connection.cursor()
-            cursor.execute(query)
-            result = cursor.fetchall()
-
-            tab = PrettyTable(["Email", "Role"])
-            for i in result:
-                tab.add_row([i[0], i[1]])
-            print(tab)
-            print("Enter anything to go back to main menu")
-            oper = input("")
-        if(oper == '3'):
-            query = "SELECT Email, Role FROM users WHERE Role = 'superadmin';"
-            cursor = connection.cursor()
-            cursor.execute(query)
-            result = cursor.fetchall()
-
-            tab = PrettyTable(["Email", "Role"])
-            for i in result:
-                tab.add_row([i[0], i[1]])
-            print(tab)
-            print("Enter anything to bo back to main menu")
-            oper = input("")
-
-    elif(oper == 'n'):
-        e = input("Enter Email to be Filtered: ")
-        query = "SELECT Email, Role FROM users WHERE Email = '"+e+"';"
-        cursor = connection.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-
-        tab = PrettyTable(["Email", "Role"])
-        for i in result:
-            tab.add_row([i[0], i[1]])
-        print(tab)
-        oper = input("")
 
 ### End FUNCTION DEFINITIONS
 ### Start Program
@@ -132,7 +140,7 @@ connection = create_server_connection("localhost", "admin", "admin", "CompProjec
 
 
 
-print("Welcome to [INSERT NAME]")
+# print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
     print("Choose your preferred option")
     if(role != None):
@@ -146,8 +154,8 @@ while(True): #infinite loop
         print("2)Logout")
     if(role == "venueadmin" or role == "superadmin"):
         print("3)Add, edit, remove movies playing") #for Venueadmin, superadmin
-    if(role == "superadmin"):
-        print("4)Add, edit, remove users") #for superadmin
+    # if(role == "superadmin"):
+    #     print("4)Add, edit, remove users") #for superadmin
     print("5)Exit Program")
     if(loginstatus == False):
         print("6)Sign up")
@@ -166,9 +174,9 @@ while(True): #infinite loop
     if(role == "superadmin" and oper == '3'):
         getMovielist()
         continue #Show all movies
-    if(role == "superadmin" and oper == '4'):
-        getUserlist(connection)
-        continue
+    # if(role == "superadmin" and oper == '4'):
+    #     getUserlist(connection)
+    #     continue
     if(oper == '5'):
         print("Exiting...")
         connection.close()

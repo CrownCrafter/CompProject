@@ -11,8 +11,7 @@ Venue varchar(60),
 Seats_free INT(5),
 Total_seats INT(5),
 Time DATETIME,
-PRIMARY KEY(MovieID),
-UNIQUE KEY(Name));
+PRIMARY KEY(MovieID));
 
 CREATE TABLE users(
 UserID INT(10) NOT NULL AUTO_INCREMENT,
@@ -35,3 +34,4 @@ Name varchar(255),
 UserID INT(10),
 PRIMARY KEY(VenueID),
 UNIQUE KEY(Name));
+ALTER TABLE movies ADD free_seats VARCHAR(500);
