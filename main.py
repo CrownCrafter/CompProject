@@ -1,4 +1,4 @@
-
+import time
 ### Start Dependencies
 from prettytable import PrettyTable
 import mysql.connector
@@ -157,6 +157,7 @@ connection = create_server_connection("localhost", "admin", "admin", "CompProjec
 
 # print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
+    print(time.ctime())
     print("Choose your preferred option")
     if(role != None):
         print("Logged in as " + str(role))
