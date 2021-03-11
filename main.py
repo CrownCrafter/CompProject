@@ -1,5 +1,5 @@
-import time
 ### Start Dependencies
+import time
 from prettytable import PrettyTable
 import mysql.connector
 ### End Dependencies
@@ -10,7 +10,6 @@ pwd = None
 role = None
 loginstatus = False
 
-#TODO Connect to DB
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
 def create_server_connection(host_name, user_name, user_password, db):
@@ -27,6 +26,11 @@ def create_server_connection(host_name, user_name, user_password, db):
 
     return connection
 
+def getSignupScreen():
+    newEmail = input("Type your email: ")
+    newPassword = input("Type your password: ")
+    #SQL
+    print("You're credentials have been added, you can now log in")
 
 def getLoginScreen(connection):
     global email, pwd, role, loginstatus
@@ -40,9 +44,15 @@ def getLoginScreen(connection):
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchone()
-    email= result[0]  ## TRY and EXCEPT block2s
-    role = result[1]
+    try:
+        email= result[0]
+        role = result[1]
+    except:
+        print("You're credentials are incorrect")
     if(role != None):
+        if(role == 'venueadmin'):
+            #SQL
+            print("ADD VENUE")
         loginstatus = True
 def getLogoutScreen():
     print("Logged out")
