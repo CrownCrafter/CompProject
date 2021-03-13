@@ -5,6 +5,7 @@ import mysql.connector
 ### End Dependencies
 ### Start VARIABLE DECLARATIONS
 loginstatus = False
+id = None
 email = None
 pwd = None
 role = None
@@ -40,19 +41,17 @@ def getLoginScreen(connection):
     loginstatus = False
     email = input("Type Email ")
     pwd = input("Type Password ")
-    query = "SELECT Email, Role FROM users WHERE Email = '" + email + "' AND Password = '" + pwd +"';"
+    query = "SELECT UserID, Email, Role FROM users WHERE Email = '" + email + "' AND Password = '" + pwd +"';"
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchone()
     try:
-        email= result[0]
-        role = result[1]
+        id = result[0]
+        email= result[1]
+        role = result[2]
     except:
         print("You're credentials are incorrect")
     if(role != None):
-        if(role == 'venueadmin'):
-            #SQL
-            print("ADD VENUE")
         loginstatus = True
 def getLogoutScreen():
     print("Logged out")
@@ -134,20 +133,16 @@ def getLogoutScreen():
 #         print(tab)
 #         oper = input("")
 def getMovielist():
-
-    query = "SELECT Name, Venue, Seats_free, Time FROM movies;"
-    cursor = connection.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
-    for i in result:
-        tab.add_row([i[0], i[1], i[2], i[3]])
-    print(tab)
-    print("To Filter by Name, press n")
-    oper = input("")
-    if(oper == 'n'):
-        name = input("Enter Movie Name ")
-        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+    if(role == 'venueadmin'):
+        #For Venueadmin
+        #TODO unfinished GET VENUE NAME
+        query = "SELECT Name FROM venues WHERE UserID='"+str(id)+"';"
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchone()
+        print(result)
+    else:
+        query = "SELECT Name, Venue, Seats_free, Time FROM movies;"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
@@ -155,7 +150,19 @@ def getMovielist():
         for i in result:
             tab.add_row([i[0], i[1], i[2], i[3]])
         print(tab)
+        print("To Filter by Name, press n")
         oper = input("")
+        if(oper == 'n'):
+            name = input("Enter Movie Name ")
+            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            for i in result:
+                tab.add_row([i[0], i[1], i[2], i[3]])
+            print(tab)
+            oper = input("")
 
 
 
