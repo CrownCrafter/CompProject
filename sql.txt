@@ -1,0 +1,37 @@
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+Create DATABASE CompProject;
+GRANT ALL PRIVILEGES ON CompProject.* TO 'admin'@'localhost';
+flush PRIVILEGES;
+
+USE CompProject;
+CREATE TABLE movies(
+MovieID INT(10) NOT NULL AUTO_INCREMENT,
+Name varchar(60),
+Venue varchar(60),
+Seats_free INT(5),
+Total_seats INT(5),
+Time DATETIME,
+PRIMARY KEY(MovieID));
+
+CREATE TABLE users(
+UserID INT(10) NOT NULL AUTO_INCREMENT,
+Email varchar(255),
+Password varchar(255),
+Role varchar(255),
+PRIMARY KEY(UserID),
+UNIQUE KEY(Email));
+
+CREATE TABLE tickets(
+TicketID INT(10) NOT NULL AUTO_INCREMENT,
+UserID INT(10),
+MovieID INT(10),
+PRIMARY KEY(TicketID));
+
+
+CREATE TABLE venues(
+VenueID INT(10) NOT NULL AUTO_INCREMENT,
+Name varchar(255),
+UserID INT(10),
+PRIMARY KEY(VenueID),
+UNIQUE KEY(Name));
+ALTER TABLE movies ADD free_seats VARCHAR(500);
