@@ -34,7 +34,8 @@ def getSignupScreen():
     print("You're credentials have been added, you can now log in")
 
 def getLoginScreen(connection):
-    global email, pwd, role, loginstatus
+    global id, email, pwd, role, loginstatus
+    id = None
     email = None
     pwd = None
     role = None
@@ -135,14 +136,47 @@ def getLogoutScreen():
 def getMovielist():
     if(role == 'venueadmin'):
         #For Venueadmin
-        #TODO unfinished GET VENUE NAME
         query = "SELECT Name FROM venues WHERE UserID='"+str(id)+"';"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchone()
-        print(result)
+        venueName = result[0] #VenueName of Venueadmin
+        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Venue='"+str(venueName)+"' AND Time >= now();"
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        print("Venue Admin of ", venueName)
+        tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+        for i in result:
+            tab.add_row([i[0], i[1], i[2], i[3]])
+        print(tab)
+        print("To Filter by Name, press n")
+        print("To View all movies, press a")
+        oper = input("")
+        if(oper == 'n'):
+            name = input("Enter Movie Name ")
+            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            for i in result:
+                tab.add_row([i[0], i[1], i[2], i[3]])
+            print(tab)
+            oper = input("")
+        if(oper == 'a'):
+            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE venue='"+str(venueName)+"';"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            print("Venue Admin of ", venueName)
+            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            for i in result:
+                tab.add_row([i[0], i[1], i[2], i[3]])
+            print(tab)
+
     else:
-        query = "SELECT Name, Venue, Seats_free, Time FROM movies;"
+        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Time >= now();"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
