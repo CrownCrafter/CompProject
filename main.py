@@ -13,7 +13,7 @@ loginstatus = False
 
 ### End VARIABLE DECLARATIONS
 ### Start FUNCTION DEFINITIONS
-def create_server_connection(host_name, user_name, user_password, db):
+def create_server_connection(host_name, user_name, user_password, db): #Server Connect
     connection = None
     try:
         connection = mysql.connector.connect(
@@ -27,37 +27,40 @@ def create_server_connection(host_name, user_name, user_password, db):
 
     return connection
 
-def getSignupScreen():
+def getSignupScreen() -> str:
     newEmail = input("Type your email: ")
     newPassword = input("Type your password: ")
     #SQL
     print("You're credentials have been added, you can now log in")
 
-def getLoginScreen(connection):
+def getLoginScreen(connection) -> str:
     global id, email, pwd, role, loginstatus
-    id = None
-    email = None
-    pwd = None
-    role = None
-    loginstatus = False
+    # id = None
+    # email = None
+    # pwd = None
+    # role = None
+    # loginstatus = False
+
     email = input("Type Email ")
     pwd = input("Type Password ")
     query = "SELECT UserID, Email, Role FROM users WHERE Email = '" + email + "' AND Password = '" + pwd +"';"
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchone()
+    # Basically to check as None
     try:
         id = result[0]
         email= result[1]
         role = result[2]
     except:
         print("You're credentials are incorrect")
-    if(role != None):
+    if(role != None): # Giving Power to user
         loginstatus = True
-def getLogoutScreen():
+
+def getLogoutScreen() -> str:
     print("Logged out")
     global email, pwd, role, loginstatus
-    loginstatus = False
+    loginstatus = False # logging out
     email = None
     pwd = None
     role = None
@@ -133,6 +136,7 @@ def getLogoutScreen():
 #             tab.add_row([i[0], i[1]])
 #         print(tab)
 #         oper = input("")
+
 def getMovielist():
     if(role == 'venueadmin'):
         #For Venueadmin
@@ -141,57 +145,69 @@ def getMovielist():
         cursor.execute(query)
         result = cursor.fetchone()
         venueName = result[0] #VenueName of Venueadmin
+
         query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Venue='"+str(venueName)+"' AND Time >= now();"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+
         print("Venue Admin of ", venueName)
+
         tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
         for i in result:
             tab.add_row([i[0], i[1], i[2], i[3]])
         print(tab)
+
         print("To Filter by Name, press n")
         print("To View all movies, press a")
         oper = input("")
-        if(oper == 'n'):
+
+        if(oper == 'n'): #Search by Movie name, only show movies owned by venue
             name = input("Enter Movie Name ")
             query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
             tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
             for i in result:
                 tab.add_row([i[0], i[1], i[2], i[3]])
             print(tab)
             oper = input("")
-        if(oper == 'a'):
+
+        if(oper == 'a'): #Search by all, only show movies owned by venue
             query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE venue='"+str(venueName)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
             print("Venue Admin of ", venueName)
             tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
             for i in result:
                 tab.add_row([i[0], i[1], i[2], i[3]])
             print(tab)
 
-    else:
+    else: #For anyone else
         query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Time >= now();"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+
         tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
         for i in result:
             tab.add_row([i[0], i[1], i[2], i[3]])
         print(tab)
+
         print("To Filter by Name, press n")
         oper = input("")
-        if(oper == 'n'):
+
+        if(oper == 'n'): # Search by Name
             name = input("Enter Movie Name ")
             query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
+
             tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
             for i in result:
                 tab.add_row([i[0], i[1], i[2], i[3]])
@@ -208,28 +224,35 @@ connection = create_server_connection("localhost", "admin", "admin", "CompProjec
 
 # print("Welcome to [INSERT NAME]")
 while(True): #infinite loop
-    print(time.ctime())
+    print(time.ctime()) #TIME
     print("Choose your preferred option")
     if(role != None):
         print("Logged in as " + str(role))
-    if(loginstatus == True):
+
+    if(loginstatus == True): #Check if user is logged in
         print("1)View Available movies")
-    if(loginstatus == False):
+
+    elif(loginstatus == False): #Check if user is logged in
         print("2)Login")
 
     else:
         print("2)Logout")
+
     if(role == "venueadmin" or role == "superadmin"):
         print("3)Add, edit, remove movies playing") #for Venueadmin, superadmin
-    # if(role == "superadmin"):
+    # if(role == "superadmin"): BUG
     #     print("4)Add, edit, remove users") #for superadmin
     print("5)Exit Program")
-    if(loginstatus == False):
+
+    if(loginstatus == False): # Check if user is logged in
         print("6)Sign up")
     oper = input("")
+
+    #Check Input(oper value)
     if(oper == '1' and loginstatus == True):
-        getMovielist() #Only view
+        getMovielist()
         continue
+
     elif(oper == '2'):
         if(loginstatus == False):
             getLoginScreen(connection)
@@ -238,7 +261,7 @@ while(True): #infinite loop
     if(role == "venueadmin" and oper == '3'):
         getMovielist()
         continue #Show only venueadmin's venue movies with add, remove, edit privileges
-    if(role == "superadmin" and oper == '3'):
+    elif(role == "superadmin" and oper == '3'):
         getMovielist()
         continue #Show all movies
     # if(role == "superadmin" and oper == '4'):
@@ -250,4 +273,5 @@ while(True): #infinite loop
         break
     if(loginstatus == False and oper == '6'):
         getSignupScreen()
+    #FYI no else block for random inputs, it's a loop
 #End
