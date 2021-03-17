@@ -1,3 +1,6 @@
+### ***TODO LIST***
+### TODO TICKETING SQL
+### TODO ADD, EDIT, DELETE movies to venue for venueadmin
 ### Start Dependencies
 import time
 from prettytable import PrettyTable
@@ -30,8 +33,15 @@ def create_server_connection(host_name, user_name, user_password, db): #Server C
 def getSignupScreen() -> str:
     newEmail = input("Type your email: ")
     newPassword = input("Type your password: ")
-    #SQL
-    print("You're credentials have been added, you can now log in")
+
+    query = "INSERT INTO users(Email, Password, Role) VALUES ('"+str(newEmail)+"', '"+str(newPassword)+"', 'user');"
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        result = cursor.fetchone()
+        print("You're credentials have been added, you can now log in")
+    except:
+        print("There was some error in adding your credentials, this email is already in use")
 
 def getLoginScreen(connection) -> str:
     global id, email, pwd, role, loginstatus
@@ -146,16 +156,16 @@ def getMovielist():
         result = cursor.fetchone()
         venueName = result[0] #VenueName of Venueadmin
 
-        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Venue='"+str(venueName)+"' AND Time >= now();"
+        query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE Venue='"+str(venueName)+"' AND Time >= now();"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
 
         print("Venue Admin of ", venueName)
 
-        tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+        tab = PrettyTable(["MovieID","Name", "Venue", "Seats_free", "Time"])
         for i in result:
-            tab.add_row([i[0], i[1], i[2], i[3]])
+            tab.add_row([i[0], i[1], i[2], i[3], i[4]])
         print(tab)
 
         print("To Filter by Name, press n")
@@ -164,55 +174,73 @@ def getMovielist():
 
         if(oper == 'n'): #Search by Movie name, only show movies owned by venue
             name = input("Enter Movie Name ")
-            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+            query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
 
-            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
             for i in result:
-                tab.add_row([i[0], i[1], i[2], i[3]])
+                tab.add_row([i[0], i[1], i[2], i[3], i[4]])
             print(tab)
             oper = input("")
 
         if(oper == 'a'): #Search by all, only show movies owned by venue
-            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE venue='"+str(venueName)+"';"
+            query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE venue='"+str(venueName)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
 
             print("Venue Admin of ", venueName)
-            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
             for i in result:
-                tab.add_row([i[0], i[1], i[2], i[3]])
+                tab.add_row([i[0], i[1], i[2], i[3], i[4]])
             print(tab)
 
     else: #For anyone else
-        query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Time >= now();"
+        query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE Time >= now();"
         cursor = connection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
 
-        tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+        tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
         for i in result:
-            tab.add_row([i[0], i[1], i[2], i[3]])
+            tab.add_row([i[0], i[1], i[2], i[3], i[4]])
         print(tab)
 
-        print("To Filter by Name, press n")
+        print("To Filter by Name, press n ")
+        print("To Filter by MovieID and book tickets, press b ")
         oper = input("")
 
         if(oper == 'n'): # Search by Name
             name = input("Enter Movie Name ")
-            query = "SELECT Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
+            query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE Name='"+str(name)+"';"
             cursor = connection.cursor()
             cursor.execute(query)
             result = cursor.fetchall()
 
-            tab = PrettyTable(["Name", "Venue", "Seats_free", "Time"])
+            tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
             for i in result:
-                tab.add_row([i[0], i[1], i[2], i[3]])
+                tab.add_row([i[0], i[1], i[2], i[3], i[4]])
             print(tab)
             oper = input("")
+        if(oper == 'b'): #Search by MovieID
+            id_query = input("Enter Movie ID to be filtered")
+            query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE MovieID='"+str(id_query)+"' AND Time >= now();"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            result = cursor.fetchone()
+
+            if(result == None):
+                print("No Movies are coming up!!!")
+
+            else:
+                tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
+                tab.add_row([result[0], result[1], result[2], result[3], result[4]])
+                print(tab)
+                # query = "INSERT INTO tickets(UserID, MovieID) VALUES ("+str(id)+", "+str()+")"
+
+            oper = ("") # Useless Waiting Variable
 
 
 
@@ -232,7 +260,7 @@ while(True): #infinite loop
     if(loginstatus == True): #Check if user is logged in
         print("1)View Available movies")
 
-    elif(loginstatus == False): #Check if user is logged in
+    if(loginstatus == False): #Check if user is logged in
         print("2)Login")
 
     else:
