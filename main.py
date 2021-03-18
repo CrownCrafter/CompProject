@@ -1,5 +1,5 @@
 ### ***TODO LIST***
-### TODO TICKETING SQL
+### TICKETING SQL DONE ENHANCEMENT Ask user for seat
 ### TODO ADD, EDIT, DELETE movies to venue for venueadmin
 ### Start Dependencies
 import time
@@ -38,7 +38,7 @@ def getSignupScreen() -> str:
     cursor = connection.cursor()
     try:
         cursor.execute(query)
-        result = cursor.fetchone()
+        connection.commit() # Fixed bug where INSERT not possible
         print("You're credentials have been added, you can now log in")
     except:
         print("There was some error in adding your credentials, this email is already in use")
@@ -238,9 +238,17 @@ def getMovielist():
                 tab = PrettyTable(["MovieID", "Name", "Venue", "Seats_free", "Time"])
                 tab.add_row([result[0], result[1], result[2], result[3], result[4]])
                 print(tab)
-                # query = "INSERT INTO tickets(UserID, MovieID) VALUES ("+str(id)+", "+str()+")"
+                print("If you want to book this ticket, press B")
+                oper = input("")
+                if(oper == 'B'):
+                    query = "INSERT INTO tickets(UserID, MovieID) VALUES ('"+str(id)+"', '"+str(id_query)+"')"
+                    cursor = connection.cursor()
+                    cursor.execute(query)
+                    connection.commit() # Fixed bug where INSERT not possible
+                    print("You're Movie was booked!!!")
 
-            oper = ("") # Useless Waiting Variable
+
+            oper = input("") # Waiting Variable
 
 
 
