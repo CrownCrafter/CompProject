@@ -1,5 +1,6 @@
 ### ***TODO LIST***
 ### TICKETING SQL DONE ENHANCEMENT Ask user for seat
+### TODO See purchased Tickets
 ### TODO ADD, EDIT, DELETE movies to venue for venueadmin
 ### Start Dependencies
 import time
@@ -170,6 +171,8 @@ def getMovielist():
 
         print("To Filter by Name, press n")
         print("To View all movies, press a")
+        print("To Add a movie, press A")
+        print("To Delete a movie, press D")
         oper = input("")
 
         if(oper == 'n'): #Search by Movie name, only show movies owned by venue
@@ -196,6 +199,31 @@ def getMovielist():
             for i in result:
                 tab.add_row([i[0], i[1], i[2], i[3], i[4]])
             print(tab)
+
+        if(oper == 'A'):
+            query_MovieName = input("Input Movie Name ")
+            query_Time = input("Enter date (YYYY-MM-DD HH:MM:SS) ")
+            query = "INSERT INTO movies(Name, Venue, Time) VALUES ('"+str(query_MovieName)+"', '"+str(venueName)+"', '"+str(query_Time)+"');"
+            cursor = connection.cursor()
+            try:
+                cursor.execute(query)
+                connection.commit()
+                print("Movie has been added!")
+            except:
+                print("Some error occured, try again later")
+
+            if(oper == 'D'):
+                id_query = input("Enter Movie ID to be filtered")
+                query = "SELECT MovieID, Name, Venue, Time FROM movies WHERE MovieID='"+str(id_query)+"' AND Time >= now() AND Venue='"+str(venueName)+"';"
+                cursor = connection.cursor()
+                cursor.execute(query)
+                result = cursor.fetchone()
+                tab = PrettyTable(["MovieID", "Name", "Venue", "Time"])
+                for i in result:
+                    tab.add_row([i[0], i[1], i[2], i[3]])
+                print(tab)
+                print("Do you want to delete this movie?(y/n)")
+                oper = input("") #  TODO DELETE MOVIE
 
     else: #For anyone else
         query = "SELECT MovieID, Name, Venue, Seats_free, Time FROM movies WHERE Time >= now();"
@@ -276,7 +304,7 @@ while(True): #infinite loop
 
     if(role == "venueadmin" or role == "superadmin"):
         print("3)Add, edit, remove movies playing") #for Venueadmin, superadmin
-    # if(role == "superadmin"): BUG
+    # if(role == "superadmin"):
     #     print("4)Add, edit, remove users") #for superadmin
     print("5)Exit Program")
 
